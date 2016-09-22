@@ -8,13 +8,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
-import android.nfc.Tag;
 import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,6 +20,8 @@ import java.util.List;
  */
 public class PollService extends IntentService {
     private static final String TAG = "PollService";
+
+    static final String ACTION_SHOW_NOTIFICATION ="com.bignerdranch.android.photogallery.SHOW_NOTIFICATION";
     private static final int POLL_INTERVAL = 1000 * 60;//60 secs
 
     public static Intent newIntent(Context context) {
@@ -40,6 +40,7 @@ public class PollService extends IntentService {
             alarmManager.cancel(pi);
             pi.cancel();
         }
+        QueryPreferences.setAlarmOn(context,isOn);
 
     }
 
@@ -91,6 +92,7 @@ public class PollService extends IntentService {
                     .build();
             NotificationManagerCompat notificationManager=NotificationManagerCompat.from(this);
             notificationManager.notify(0,notification);
+            sendBroadcast(new Intent(ACTION_SHOW_NOTIFICATION));
         }
 
 
